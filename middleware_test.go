@@ -35,25 +35,25 @@ func (a middleC) Handle(h http.Handler) http.Handler {
 
 func TestMiddlewareNew(t *testing.T) {
 	m := New()
-	if len(m.middlewares) != 0 {
-		t.Errorf("unexpected result: [got] %v [want] %v", len(m.middlewares), 0)
+	if len(m) != 0 {
+		t.Errorf("unexpected result: [got] %v [want] %v", len(m), 0)
 	}
 
 	m = New(middleA{}, middleB{}, middleC{})
-	if len(m.middlewares) != 3 {
-		t.Errorf("unexpected result: [got] %v [want] %v", len(m.middlewares), 3)
+	if len(m) != 3 {
+		t.Errorf("unexpected result: [got] %v [want] %v", len(m), 3)
 	}
 }
 
 func TestMiddlewareAppend(t *testing.T) {
 	m := New(middleA{})
 	m = m.Append(middleB{})
-	if len(m.middlewares) != 2 {
-		t.Errorf("unexpected result: [got] %v [want] %v", len(m.middlewares), 2)
+	if len(m) != 2 {
+		t.Errorf("unexpected result: [got] %v [want] %v", len(m), 2)
 	}
 	m = m.Append(middleC{})
-	if len(m.middlewares) != 3 {
-		t.Errorf("unexpected result: [got] %v [want] %v", len(m.middlewares), 3)
+	if len(m) != 3 {
+		t.Errorf("unexpected result: [got] %v [want] %v", len(m), 3)
 	}
 }
 
