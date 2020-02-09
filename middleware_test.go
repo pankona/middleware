@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,20 +16,29 @@ type (
 
 func (a middleA) Handle(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("middleA "))
+		_, err := w.Write([]byte("middleA "))
+		if err != nil {
+			log.Println("failed to write middle A")
+		}
 		h.ServeHTTP(w, r)
 	})
 
 }
 func (a middleB) Handle(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("middleB "))
+		_, err := w.Write([]byte("middleB "))
+		if err != nil {
+			log.Println("failed to write middle A")
+		}
 		h.ServeHTTP(w, r)
 	})
 }
 func (a middleC) Handle(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("middleC "))
+		_, err := w.Write([]byte("middleC "))
+		if err != nil {
+			log.Println("failed to write middle A")
+		}
 		h.ServeHTTP(w, r)
 	})
 }
@@ -60,7 +70,10 @@ func TestMiddlewareAppend(t *testing.T) {
 func TestMiddlewareApplyEmpty(t *testing.T) {
 	handler := http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("test"))
+			_, err := w.Write([]byte("test"))
+			if err != nil {
+				log.Println("failed to write middle A")
+			}
 		})
 	recorder := httptest.NewRecorder()
 	m := New()
@@ -87,7 +100,10 @@ func TestMiddlewareApplyEmpty(t *testing.T) {
 func TestMiddlewareApply(t *testing.T) {
 	handler := http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("test"))
+			_, err := w.Write([]byte("test"))
+			if err != nil {
+				log.Println("failed to write middle A")
+			}
 		})
 	recorder := httptest.NewRecorder()
 	m := New(middleA{}, middleB{}, middleC{})
